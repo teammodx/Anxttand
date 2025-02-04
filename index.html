@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | ANXT AI</title>
+    <script>
+        async function login() {
+            const uid = localStorage.getItem('device_uid') || generateUID();
+            localStorage.setItem('device_uid', uid);
+
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ uid })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                window.location.href = "dashboard.html";
+            } else {
+                alert("Access Denied");
+            }
+        }
+
+        function generateUID() {
+            return 'UID-' + Math.random().toString(36).substring(2, 12);
+        }
+    </script>
+</head>
+<body onload="login()">
+    <h2>Checking Access...</h2>
+</body>
+</html>

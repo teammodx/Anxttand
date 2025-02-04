@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANXT AI V1</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        body { background: linear-gradient(135deg, #0a0f1e, #1c1e3a); display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: 'Orbitron', sans-serif; margin: 0; overflow: hidden; }
+        .container { width: 85%; padding: 20px; margin: 15px 0; text-align: center; border-radius: 15px; background: linear-gradient(135deg, rgba(0, 255, 170, 0.3), rgba(0, 255, 170, 0.1)); border: 2px solid rgba(0, 255, 170, 0.8); box-shadow: 0px 0px 15px rgba(0, 255, 170, 0.5); transition: 0.3s; }
+        .container:hover { transform: scale(1.02); box-shadow: 0px 0px 25px rgba(0, 255, 170, 0.8); }
+        #title { font-size: 28px; font-weight: bold; color: #00ffaa; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0px 0px 15px rgba(0, 255, 170, 0.8); }
+        #period-label, #result-label { font-size: 18px; font-weight: bold; color: #ffffff; }
+        #textview1, #result-view { font-size: 24px; font-weight: bold; color: #ff0077; text-shadow: 0px 0px 15px rgba(255, 0, 119, 0.8); }
+        .list-container { width: 85%; max-height: 200px; overflow-y: auto; text-align: center; background: linear-gradient(135deg, rgba(0, 255, 170, 0.3), rgba(0, 255, 170, 0.1)); border: 2px solid rgba(0, 255, 170, 0.8); border-radius: 10px; padding: 15px; box-shadow: 0px 0px 15px rgba(0, 255, 170, 0.5); }
+        .list-item { font-size: 16px; color: #ffffff; padding: 5px 0; border-bottom: 1px solid rgba(0, 255, 170, 0.5); }
+        .list-item:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+    <div class="container"><div id="title">ANXT AI V1</div></div>
+    <div class="container"><div id="period-label">PERIOD</div><div id="textview1">Loading...</div></div>
+    <div class="container"><div id="result-label">Prediction Result:</div><div id="result-view">Loading...</div></div>
+    <div class="list-container" id="listView"><div class="list-item">Previous results will appear here...</div></div>
+    <script>
+        let lastPeriod = "", lastResult = "";
+        function updatePeriod() {
+            let now = new Date(), options = { timeZone: 'Asia/Kolkata' };
+            let currentDate = new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit', ...options }).format(now).replace(/\//g, '');
+            let hours = now.getHours(), minutes = now.getMinutes();
+            let elapsedMinutes = (hours * 60 + minutes) - (5 * 60 + 29);
+            if (elapsedMinutes < 0) elapsedMinutes = 0;
+            let periodNumber = "100001" + elapsedMinutes.toString().padStart(4, '0');
+            let fullPeriod = currentDate + periodNumber;
+            if (fullPeriod !== lastPeriod) {
+                lastPeriod = fullPeriod;
+                let calculationTexts = ["BIG", "SMALL", "SMALL", "SMALL", "BIG", "SMALL", "BIG", "BIG", "SMALL", "BIG"];
+                lastResult = calculationTexts[Math.floor(Math.random() * calculationTexts.length)];
+                let listView = document.getElementById("listView");
+                let newItem = document.createElement("div");
+                newItem.classList.add("list-item");
+                newItem.innerText = `${fullPeriod} → Result: ${lastResult}`;
+                listView.insertBefore(newItem, listView.firstChild);
+                if (listView.children.length > 10) listView.removeChild(listView.lastChild);
+            }
+            document.getElementById("textview1").innerText = fullPeriod;
+            document.getElementById("result-view").innerText = lastResult;
+        }
+        setInterval(updatePeriod, 1000);
+        updatePeriod();
+    </script>
+</body>
+</html>
